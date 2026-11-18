@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" style="background:#ffffff !important;color:#111111;color-scheme:light only">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -11,6 +11,9 @@
 <meta name="apple-mobile-web-app-title" content="장기투자">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="color-scheme" content="light only">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: dark)">
 <meta name="supported-color-schemes" content="light">
 <title>장기 투자, 이렇게 합니다 - 역대 기록으로 보기</title>
 <style>
@@ -96,9 +99,22 @@ body{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
 }
 /* 리더 모드 / 야간 모드에서 이미지 반전 방지 */
 img,svg{filter:none !important}
+
+/* 삼성 인터넷 야간모드 강제 방지 - 가장 강하게 흰색 고정 */
+html,body{background:#ffffff !important;color:#111111 !important;color-scheme:light only !important;forced-color-adjust:none !important;-webkit-color-adjust:exact !important;color-adjust:exact !important;filter:none !important}
+*{forced-color-adjust:none !important;-webkit-color-adjust:exact !important}
+.wrap,.card,header,.notice{background:#ffffff !important}
+header{background:linear-gradient(180deg,#eef6ff,#ffffff) !important}
+.card{background:#ffffff !important;color:#111111 !important}
+input[type=text]{background:#ffffff !important;color:#111111 !important}
+@media (prefers-color-scheme: dark){
+  html,body,.wrap,.card,header,.notice{background:#ffffff !important;color:#111111 !important}
+  *{background-color:inherit}
+  .card,.notice{color:#111111 !important}
+}
 </style>
 </head>
-<body>
+<body style="background:#ffffff !important;color:#111111;color-scheme:light only">
 <div class="wrap">
 <header>
 <h1>장기 투자,<br>이렇게 합니다</h1>
@@ -112,12 +128,12 @@ img,svg{filter:none !important}
 <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 10px">
 <a href="https://www.youtube.com/@%EC%9D%B4%ED%95%B4%EB%AA%85%EC%83%81" target="_blank" rel="noopener" style="text-decoration:none;background:#eef6ff;border:1px solid #dbeafe;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:700;color:#1a3fd6">이해 명상 YouTube 바로가기 ↗</a>
 <div style="display:flex;align-items:center;gap:6px">
-<button id="medBtn" title="명상" style="width:42px;height:42px;border-radius:50%;border:1px solid #e8eef7;background:linear-gradient(180deg,#ffffff,#f0f7ff);font-size:22px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.06)">🧘</button>
-<input type="file" id="csvFile" accept=".csv,.txt" style="display:none">
-<button id="backDemo" style="display:none;background:#fff;border:1px solid #ddd;padding:7px 10px;border-radius:999px;font-size:12.5px;cursor:pointer">데모로 돌아가기</button>
+<span title="명상" style="width:42px;height:42px;border-radius:50%;border:1px solid #e8eef7;background:linear-gradient(180deg,#ffffff,#f0f7ff);font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">🧘</span>
+
+
 </div>
 </div>
-<span id="csvStatus" style="display:none"></span>
+
 <div class="card">
 <h2>🔍 종목 검색</h2>
 <p class="muted" style="margin:0 0 8px">종목명, 코드, 영어로 검색할 수 있습니다. 소문자 / 대문자 구분이 없습니다. 예: 삼성전자, SAMSUNG, 005930</p>
@@ -142,9 +158,9 @@ img,svg{filter:none !important}
 <h2>📊 상승률 / 하락률 순 — 3개</h2>
 <p class="muted" style="margin:0 0 8px">처음에는 30개만 표시됩니다. 아래 전체 보기를 누르면 2,736개가 모두 표시됩니다. 필터로 골라서 보실 수도 있습니다.</p>
 <div>
-<button class="btn2 on" id="tabRise">현재 상승률 순<br><span style="font-size:11px;font-weight:400">최저점 → 지금</span></button>
-<button class="btn2" id="tabFall">현재 하락률 순<br><span style="font-size:11px;font-weight:400">최고점 → 지금, 싼 순</span></button>
-<button class="btn2" id="tabMax">최고 상승률 순<br><span style="font-size:11px;font-weight:400">최저점 → 최고점</span></button>
+<button type="button" class="btn2 on" id="tabRise">현재 상승률 순<br><span style="font-size:11px;font-weight:400">최저점 → 지금</span></button>
+<button type="button" class="btn2" id="tabFall">현재 하락률 순<br><span style="font-size:11px;font-weight:400">최고점 → 지금, 싼 순</span></button>
+<button type="button" class="btn2" id="tabMax">최고 상승률 순<br><span style="font-size:11px;font-weight:400">최저점 → 최고점</span></button>
 </div>
 <div id="filterBox" style="margin-top:10px"></div>
 <div id="rankBox" style="margin-top:8px"></div>
@@ -281,10 +297,13 @@ function setTab(mode){
   renderFilter(); renderRank();
 }
 document.getElementById('showAllBtn').onclick=()=>{ showAll=!showAll; renderRank(); };
-// FIX: 상승률/하락률/최고 탭 버튼 연결 - 원래 빠져 있었음
+// 탭 버튼 연결 - 3개 다 눌리게 (삼성 인터넷에서도)
 document.getElementById('tabRise').onclick=()=>setTab('rise');
 document.getElementById('tabFall').onclick=()=>setTab('fall');
 document.getElementById('tabMax').onclick=()=>setTab('max');
+document.getElementById('tabRise').addEventListener('click', ()=>setTab('rise'));
+document.getElementById('tabFall').addEventListener('click', ()=>setTab('fall'));
+document.getElementById('tabMax').addEventListener('click', ()=>setTab('max'));
 const ALIAS = {
   'samsung':'삼성전자','samsung electronics':'삼성전자','samsung elec':'삼성전자','005930':'삼성전자',
   'sk hynix':'SK하이닉스','hynix':'SK하이닉스','000660':'SK하이닉스',
@@ -338,119 +357,7 @@ function findStocks(qRaw){
   if(!hits.length) hits=DATA.filter(r=>r.code.includes(q) || r.name.toLowerCase().includes(qLow));
   return hits;
 }
-// --- CSV 파싱 구멍 (위에 조그맣게) ---
-let DEMO_DATA = DATA.slice();
-let DEMO_TOP50 = TOP50.slice();
-function parseCSVLine(line){
-  const out=[]; let cur=''; let inQ=false;
-  for(let i=0;i<line.length;i++){
-    const c=line[i];
-    if(c==='"'){ if(inQ && line[i+1]==='"'){ cur+='"'; i++; } else inQ=!inQ; }
-    else if(c===',' && !inQ){ out.push(cur); cur=''; }
-    else cur+=c;
-  }
-  out.push(cur);
-  return out.map(s=>s.trim().replace(/^"|"$/g,''));
-}
-function parseRecordCSV(s){
-  if(!s) return [null,null];
-  const m=s.match(/\s*([0-9,\-]+)\s*\(([^)]+)\)/);
-  if(m){ const p=parseInt(m[1].replace(/,/g,''),10); return [isNaN(p)?null:p, m[2].trim()]; }
-  const n=parseInt(s.replace(/,/g,''),10);
-  return [isNaN(n)?null:n, null];
-}
-function yearsBetweenCSV(d1,d2){
-  try{ const a=new Date(d1.replace(/\//g,'-')); const b=new Date(d2.replace(/\//g,'-')); return (b-a).getTime()/1000/60/60/24/365.25; }catch(e){ return null; }
-}
-function fmtCapKRJS(n){
-  if(n>=1000000000000){ const jo=Math.floor(n/1000000000000); const eok=Math.floor((n%1000000000000)/100000000); return eok>0? jo+'조 '+eok.toLocaleString('ko-KR')+'억 원' : jo+'조 원'; }
-  if(n>=100000000){ const eok=Math.floor(n/100000000); const man=Math.floor((n%100000000)/10000); return man>0? eok+'억 '+man.toLocaleString('ko-KR')+'만 원' : eok+'억 원'; }
-  if(n>=10000){ const man=Math.floor(n/10000); const rest=n%10000; return rest>0? man+'만 '+rest.toLocaleString('ko-KR')+'원' : man+'만 원'; }
-  return n.toLocaleString('ko-KR')+'원';
-}
-function parseCSVText(text){
-  const lines=text.split(/\r?\n/).filter(l=>l.trim().length>0);
-  if(!lines.length) return null;
-  const header=parseCSVLine(lines[0]);
-  const idx={};
-  header.forEach((h,i)=>{ idx[h.trim()]=i; });
-  // 필수 컬럼 확인
-  const need=['종목코드','종목명','종가','기록_주가(장중)_최저','기록_주가(장중)_최고'];
-  for(const k of need){ if(idx[k]==null) return null; }
-  const todayStr=new Date().toISOString().slice(0,10).replace(/-/g,'/');
-  const out=[];
-  for(let li=1; li<lines.length; li++){
-    const cols=parseCSVLine(lines[li]);
-    try{
-      const close=parseInt((cols[idx['종가']]||'').replace(/,/g,''),10);
-      const cap=idx['시가총액']!=null ? parseInt((cols[idx['시가총액']]||'0').replace(/,/g,''),10) : 0;
-      const [lowP, lowD]=parseRecordCSV(cols[idx['기록_주가(장중)_최저']]||'');
-      const [highP, highD]=parseRecordCSV(cols[idx['기록_주가(장중)_최고']]||'');
-      if(isNaN(close)||!lowP||!highP||lowP<=0||highP<=0) continue;
-      const curRise=(close-lowP)/lowP*100;
-      const curFall=(close-highP)/highP*100;
-      const maxRise=(highP-lowP)/lowP*100;
-      const yLowNow=yearsBetweenCSV(lowD, todayStr);
-      const yLowHigh=yearsBetweenCSV(lowD, highD);
-      const yHighNow=yearsBetweenCSV(highD, todayStr);
-      const susp=(highP>close*100)||(highP>10000000&&close<100000);
-      out.push({code:(cols[idx['종목코드']]||'').trim(), name:(cols[idx['종목명']]||'').trim(), mkt:(idx['시장구분']!=null? (cols[idx['시장구분']]||'').trim():'KOSPI'), close:close, cap:isNaN(cap)?0:cap, capKR:fmtCapKRJS(isNaN(cap)?0:cap), low:lowP, lowDate:lowD, high:highP, highDate:highD, rise:Math.round(curRise*10)/10, fall:Math.round(curFall*100)/100, maxRise:Math.round(maxRise*10)/10, yLowNow:yLowNow!=null?Math.round(yLowNow*10)/10:null, yLowHigh:yLowHigh!=null?Math.round(yLowHigh*10)/10:null, yHighNow:yHighNow!=null?Math.round(yHighNow*10)/10:null, chg:(idx['등락률']!=null? (cols[idx['등락률']]||'').trim():'0'), susp:susp});
-    }catch(e){}
-  }
-  return out.length? out : null;
-}
-document.getElementById('csvFile').addEventListener('change', function(e){
-  const file=e.target.files[0];
-  if(!file) return;
-  const reader=new FileReader();
-  reader.onload=function(){
-    let text='';
-    // 인코딩: 먼저 utf-8로 시도, 깨지면 euc-kr로
-    try{
-      const buf=reader.result;
-      const utf8=new TextDecoder('utf-8', {fatal:true});
-      text=utf8.decode(buf);
-    }catch(err){
-      text=new TextDecoder('euc-kr').decode(reader.result);
-    }
-    const parsed=parseCSVText(text);
-    const status=document.getElementById('csvStatus');
-    if(!parsed){ status.textContent='이 파일은 사용할 수 없습니다. 역대 파일 형식인지 확인해 주세요. (종목코드, 종목명, 종가, 기록_주가... 가 필요합니다.)'; status.style.color='#d92d20'; return; }
-    // DATA 교체
-    DATA.length=0; parsed.forEach(r=>DATA.push(r));
-    const newTop50=DATA.slice().sort((a,b)=>b.cap-a.cap).slice(0,50);
-    TOP50.length=0; newTop50.forEach(r=>TOP50.push(r));
-    // 버전 표기 바꾸기
-    const today=new Date(); const ds=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
-    document.getElementById('versionNotice').innerHTML='<b>내 파일 버전 | 기준일: '+ds+' (오늘 넣은 파일) | 실시간 아님</b><br>파일 '+parsed.length+'종목으로 변경되었습니다. 데모로 돌아가려면 옆 버튼을 눌러주세요.<br><span class="small">파일: '+file.name+'</span>';
-    status.textContent=parsed.length+'종목으로 변경되었습니다.';
-    status.style.color='#1a6cff';
-    document.getElementById('backDemo').style.display='inline-block';
-    // 다시 그리기
-    renderTop50();
-    curMode='rise'; showAll=false; curFilter='all';
-    document.getElementById('tabRise').classList.add('on');
-    document.getElementById('tabFall').classList.remove('on');
-    document.getElementById('tabMax').classList.remove('on');
-    renderFilter(); renderRank();
-    const def=DATA.find(x=>x.name==='삼성전자')||TOP50[0];
-    if(def) document.getElementById('detail').innerHTML=cardHTML(def);
-    document.getElementById('detail').scrollIntoView({behavior:'smooth'});
-  };
-  reader.readAsArrayBuffer(file);
-});
-document.getElementById('backDemo').addEventListener('click', ()=>{
-  DATA.length=0; DEMO_DATA.forEach(r=>DATA.push(r));
-  TOP50.length=0; DEMO_TOP50.forEach(r=>TOP50.push(r));
-  document.getElementById('versionNotice').innerHTML='<b>데모 버전 | 기준일: 2026-11-18 | 실시간 아님</b><br>실시간이 아닙니다. 이 날짜에 받은 파일 기준입니다.<br><span class="small">데이터: 역대 기록 파일 2,736종목 · 가격과 날짜가 모두 포함되어 있습니다. 단위는 대한민국식으로 표시합니다. 시가총액은 조 / 억 / 만으로 표시합니다.</span>';
-  document.getElementById('csvStatus').textContent='데모로 보는 중입니다. 파일을 넣으면 해당 파일로 변경됩니다.';
-  document.getElementById('csvStatus').style.color='#666';
-  document.getElementById('backDemo').style.display='none';
-  document.getElementById('csvFile').value='';
-  renderTop50(); setTab('rise');
-  const def=DATA.find(x=>x.name==='삼성전자')||TOP50[0];
-  if(def) document.getElementById('detail').innerHTML=cardHTML(def);
-});
+// 내용만 보여주기 버전입니다. 파일을 넣는 기능, 계산하는 기능이 없습니다. 결과표만 보여줍니다.
 const CATS6=[
 { t:'1. AI 혁명 — 새로운 산업혁명입니다', c:'증기기관, 전기, 인터넷 다음이 AI입니다.<br>산업혁명 이후에 가장 큰 혁명이 지금 오고 있습니다.<br>AI는 모든 산업을 바꿉니다. 반도체, 자동차, 의료, 금융, 교육, 다 바뀝니다.<br>이런 혁명은 1년, 2년으로 끝나지 않습니다. 10년, 20년 갑니다.<br>그래서 혁명에는 단타가 아니라, 장기 투자가 맞습니다.' },
 { t:'2. 미래의 기업 — 어디가 커질까요', c:'앞으로 10년 뒤에 커질 기업은, AI를 만드는 기업, AI를 쓰는 기업입니다.<br>반도체를 만드는 기업, 로봇을 만드는 기업, 바이오를 연구하는 기업, 우주를 가는 기업.<br>지금은 작아 보여도, 10년 뒤에는 어마어마해질 수 있습니다.<br>그래서 오늘 가격만 보고 판단하면 안 됩니다. 10년 뒤를 보고 판단해야 합니다.' },
@@ -466,22 +373,7 @@ const CATS6=[
 { t:'12. 10년을 기다리면, 누가 돈을 버는가', c:'단타를 하면, 수수료는 증권사가 가져갑니다. 세금은 나라가 가져갑니다.<br>장기 투자를 하면, 그 돈을 내가 가져갑니다.<br>10년을 기다리면, 수수료와 세금을 아낀 만큼, 내 돈이 됩니다.<br>그래서 장기 투자는 \'기다리는 것\'이 아니라, \'내 돈을 지키는 것\'입니다.' },
 ];
 
-// 🧘 두 번 누르면 CSV 열기 - 한 번은 아무 일 없음
-(function(){
-  const med=document.getElementById('medBtn');
-  const fileInput=document.getElementById('csvFile');
-  if(!med||!fileInput) return;
-  let lastTap=0;
-  med.addEventListener('click', ()=>{
-    const now=Date.now();
-    if(now-lastTap<600){
-      fileInput.click();
-      lastTap=0;
-    } else {
-      lastTap=now;
-    }
-  });
-})();
+// 명상 이모지는 장식입니다. 눌러도 아무 일도 없습니다.
 
 function renderCats6(){
   const el=document.getElementById('cats6');
