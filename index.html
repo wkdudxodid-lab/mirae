@@ -281,6 +281,10 @@ function setTab(mode){
   renderFilter(); renderRank();
 }
 document.getElementById('showAllBtn').onclick=()=>{ showAll=!showAll; renderRank(); };
+// FIX: 상승률/하락률/최고 탭 버튼 연결 - 원래 빠져 있었음
+document.getElementById('tabRise').onclick=()=>setTab('rise');
+document.getElementById('tabFall').onclick=()=>setTab('fall');
+document.getElementById('tabMax').onclick=()=>setTab('max');
 const ALIAS = {
   'samsung':'삼성전자','samsung electronics':'삼성전자','samsung elec':'삼성전자','005930':'삼성전자',
   'sk hynix':'SK하이닉스','hynix':'SK하이닉스','000660':'SK하이닉스',
